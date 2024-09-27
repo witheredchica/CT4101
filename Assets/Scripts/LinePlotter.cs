@@ -55,6 +55,7 @@ public class LinePlotter : MonoBehaviour {
     }
 
     private void OnValidate() {
+        //clears points list 
         points.Clear();
         
         float x = -10f;
@@ -62,18 +63,22 @@ public class LinePlotter : MonoBehaviour {
         for (float xPos = x; xPos < 10f; xPos += 0.2f) {
             switch (isCircle) {
                 case true:
+                    //calculates circle
                     points.Add(new Vector3(xPos, CalcCircleY(xPos, x1, c), 0f));
                     if (funkyMode) {
+                        //makes circle look funky :)
                         points.Add(new Vector3(xPos, -1 * CalcCircleY(xPos, x1, c), 0f));
                     }
                     break;
                 case false:
+                    //calculates non-circle line
                     points.Add(new Vector3(xPos, CalcY(xPos, x1, y1, m, c, p), 0f));
                     break;
             }
         }
 
         if (isCircle && !funkyMode) {
+            //loops back from the end for bottom half of circle
             for (float xPos = -1 * x; xPos > x; xPos -= 0.2f) {
                 points.Add(new Vector3(xPos, -1 * CalcCircleY(xPos, x1, c), 0f));
             }
