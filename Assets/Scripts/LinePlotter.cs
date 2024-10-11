@@ -5,7 +5,7 @@ using UnityEngine;
 [ExecuteInEditMode]
 
 public class LinePlotter : MonoBehaviour {
-    [SerializeField] private List<Vector3> points;
+    [SerializeField] private List<Vec2> points;
     public float x1 = 0f;
     public float y1 = 0f;
     public float m = 1f;
@@ -26,7 +26,7 @@ public class LinePlotter : MonoBehaviour {
             for (int i = 0; i < points.Count - 1; i++) {
                 //rotate hue each point
                 Gizmos.color = Color.HSVToRGB((1.0f/points.Count)*i, 1, 1);
-                Gizmos.DrawLine(points[i], points[i + 1]);
+                Gizmos.DrawLine(points[i].ToVector3(), points[i + 1].ToVector3());
             }
         }
     }
@@ -44,13 +44,13 @@ public class LinePlotter : MonoBehaviour {
     }
 
     private void Start() {
-        points = new List<Vector3>();
+        points = new List<Vec2>();
 
         float x = -10f;
 
         //create points to go on the line
         for (float xPos = x; xPos < 10f; xPos += 0.2f) {
-            points.Add(new Vector3(xPos, CalcY(xPos, x1, y1, m, c, p), 0f));
+            points.Add(new Vec2(xPos, CalcY(xPos, x1, y1, m, c, p)));
         }
     }
 
@@ -64,15 +64,15 @@ public class LinePlotter : MonoBehaviour {
             switch (isCircle) {
                 case true:
                     //calculates circle
-                    points.Add(new Vector3(xPos, CalcCircleY(xPos, x1, c), 0f));
+                    points.Add(new Vec2(xPos, CalcCircleY(xPos, x1, c)));
                     if (funkyMode) {
                         //makes circle look funky :)
-                        points.Add(new Vector3(xPos, -1 * CalcCircleY(xPos, x1, c), 0f));
+                        points.Add(new Vec2(xPos, -1 * CalcCircleY(xPos, x1, c)));
                     }
                     break;
                 case false:
                     //calculates non-circle line
-                    points.Add(new Vector3(xPos, CalcY(xPos, x1, y1, m, c, p), 0f));
+                    points.Add(new Vec2(xPos, CalcY(xPos, x1, y1, m, c, p)));
                     break;
             }
         }
@@ -80,7 +80,7 @@ public class LinePlotter : MonoBehaviour {
         if (isCircle && !funkyMode) {
             //loops back from the end for bottom half of circle
             for (float xPos = -1 * x; xPos > x; xPos -= 0.2f) {
-                points.Add(new Vector3(xPos, -1 * CalcCircleY(xPos, x1, c), 0f));
+                points.Add(new Vec2(xPos, -1 * CalcCircleY(xPos, x1, c)));
             }
         }
         Debug.Log("Repopulating gizmo positions");
